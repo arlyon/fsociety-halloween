@@ -408,7 +408,7 @@ const main = (() => {
             return;
         }
 
-        if (cmdComponents[1] === "Hello" && cmdComponents[2] === "friend") {
+        if (cmdComponents[1] === "Hello" && cmdComponents[2] === "Friend") {
             this.type(
                 "Submitting [.............................]\n\nSuccess. Contact Mr Robot for compensation.",
                 this.unlock.bind(this)
