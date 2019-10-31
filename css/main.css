@@ -1,0 +1,44 @@
+::selection {
+    background: #f7d07e;
+}
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+body {
+    font-size: 10pt;
+    line-height: 1.2;
+    font-family: 'Fira Code', monospace;
+    color: #2bd670;
+    background-color: black;
+}
+#container {
+    padding: 1em;
+}
+#cmdline {
+    outline: none;
+    background-color: transparent;
+    margin: 0;
+    width: 100%;
+    font: inherit;
+    border: none;
+    color: inherit;
+}
+#output {
+    font-family: inherit;
+    width: 100%;
+    margin: 0;
+}
+.prompt-color {
+    color: #e09f14;
+}
+#prompt {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+#input-line {
+    display: flex;
+    flex-direction: row;
+}
